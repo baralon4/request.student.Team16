@@ -6,11 +6,11 @@ mongoose.connect('mongodb+srv://Dorin:Dorin1234@cluster0.twpdzpc.mongodb.net/log
   useUnifiedTopology: true
 })
 .then(() => {
-  console.log("✅ התחברת ל-MongoDB");
+  console.log(" התחברת ל-MongoDB");
   seedCourses();
 })
 .catch(err => {
-  console.error("❌ שגיאה בחיבור:", err);
+  console.error(" שגיאה בחיבור:", err);
 });
 
 const courseSchema = new mongoose.Schema({
@@ -34,9 +34,9 @@ const courses = [
 async function seedCourses() {
   try {
     await Course.insertMany(courses);
-    console.log("🎉 הקורסים נוספו בהצלחה למסד הנתונים");
+    console.log(" הקורסים נוספו בהצלחה למסד הנתונים");
     mongoose.connection.close();
   } catch (err) {
-    console.error("❌ שגיאה בהוספת הקורסים:", err);
+    console.error(" שגיאה בהוספת הקורסים:", err);
   }
 }

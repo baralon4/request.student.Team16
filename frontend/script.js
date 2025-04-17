@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("שגיאה: " + result.message);
       }
     } catch (err) {
-      alert("❌ שגיאה בשליחה לשרת: " + err.message);
+      alert(" שגיאה בשליחה לשרת: " + err.message);
     }
   });
 });

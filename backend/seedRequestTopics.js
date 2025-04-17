@@ -6,11 +6,11 @@ mongoose.connect('mongodb+srv://Dorin:Dorin1234@cluster0.twpdzpc.mongodb.net/log
   useUnifiedTopology: true
 })
 .then(() => {
-  console.log("✅ התחברת ל-MongoDB");
+  console.log(" התחברת ל-MongoDB");
   seedTopics();
 })
 .catch(err => {
-  console.error("❌ שגיאה בחיבור:", err);
+  console.error(" שגיאה בחיבור:", err);
 });
 
 const topicSchema = new mongoose.Schema({
@@ -38,9 +38,9 @@ const topics = [
 async function seedTopics() {
   try {
     await RequestTopic.insertMany(topics);
-    console.log("🎉 הנושאים נוספו בהצלחה למסד הנתונים");
+    console.log(" הנושאים נוספו בהצלחה למסד הנתונים");
     mongoose.connection.close();
   } catch (err) {
-    console.error("❌ שגיאה בהוספת הנושאים:", err);
+    console.error(" שגיאה בהוספת הנושאים:", err);
   }
 }

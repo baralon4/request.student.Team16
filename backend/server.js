@@ -9,8 +9,8 @@ const port = 3000;
 
 // התחברות למסד הנתונים
 mongoose.connect('mongodb+srv://Dorin:Dorin1234@cluster0.twpdzpc.mongodb.net/loginDB?retryWrites=true&w=majority')
-  .then(() => console.log("✅ התחברת ל-MongoDB"))
-  .catch(err => console.error("❌ שגיאה בהתחברות:", err));
+  .then(() => console.log(" התחברת ל-MongoDB"))
+  .catch(err => console.error(" שגיאה בהתחברות:", err));
 
 // אמצעי middleware
 app.use(cors());
@@ -79,9 +79,9 @@ app.post('/requests', upload.array('documents'), async (req, res) => {
     });
 
     await newRequest.save();
-    res.status(201).json({ message: '✅ הבקשה נשלחה בהצלחה' });
+    res.status(201).json({ message: ' הבקשה נשלחה בהצלחה' });
   } catch (err) {
-    res.status(500).json({ message: '❌ שגיאה בשמירת הבקשה', error: err.message });
+    res.status(500).json({ message: ' שגיאה בשמירת הבקשה', error: err.message });
   }
 });
 
