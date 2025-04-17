@@ -95,7 +95,7 @@ const Staff = () => {
 
                 {selectedRequest && ( 
                     <div className="request-details-box">
-                        <h3>Request Details</h3>
+                        <h4>Request Details</h4>
                         <p><strong>Student:</strong> {selectedRequest.student.firstname} {selectedRequest.student.lastname}</p>
                         <p><strong>Course:</strong> {selectedRequest.course?.name}</p>
                         <p><strong>Type:</strong> {selectedRequest.requestType?.name}</p>
