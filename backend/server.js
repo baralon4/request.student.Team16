@@ -99,5 +99,5 @@ app.get('/api/courses', async (req, res) => {
 
 // הפעלת השרת
 app.listen(port, () => {
-  console.log(`🚀 השרת רץ על http://localhost:${port}`);
+  console.log(` השרת רץ על http://localhost:${port}`);
 });
