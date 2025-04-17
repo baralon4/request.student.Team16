@@ -49,7 +49,7 @@ const Staff = () => {
                 )}
 
                 <div className="requests-box">
-                    <h3>Student Requests assigned to you:</h3>
+                    <h2>Student Requests assigned to you:</h2>
 
                     {isLoading ? (
                         <p>Loading requests...</p>
