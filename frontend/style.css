@@ -1,0 +1,59 @@
+body {
+  font-family: Arial, sans-serif;
+  direction: rtl;
+  background: #f7f7f7;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 500px;
+  margin: auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.hidden {
+  display: none;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+textarea, select, input[type="file"] {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+.highlight {
+  margin-top: 10px;
+  color: crimson;
+  font-weight: bold;
+}

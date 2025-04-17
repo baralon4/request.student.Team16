@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>יצירת בקשת סטודנט</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script> <!-- ✅ defer חשוב מאוד -->
+</head>
+<body>
+  <div class="container">
+    <button id="startBtn">יצירת בקשת סטודנט</button>
+
+    <form id="requestForm" class="hidden">
+      <div id="step1">
+        <label for="topicSelect">בחר נושא בקשה:</label>
+        <select id="topicSelect" name="requestType" required>
+          <option disabled selected value="">בחר נושא...</option>
+        </select>
+      </div>
+
+      <div id="step2" class="hidden">
+        <label for="courseSelect">בחר קורס:</label>
+        <select id="courseSelect" name="courseName" required>
+          <option disabled selected value="">בחר קורס...</option>
+        </select>
+
+        <label for="content">תוכן הבקשה:</label>
+        <textarea id="content" name="description" rows="5" required></textarea>
+
+        <label for="fileUpload">צרף מסמכים:</label>
+        <input type="file" id="fileUpload" name="documents" multiple />
+
+        <p id="requiredDocs" class="highlight"></p>
+
+        <button type="submit">שלח בקשה</button>
+      </div>
+
+      <p id="successMsg" class="hidden success">✅ הבקשה נשלחה בהצלחה!</p>
+    </form>
+  </div>
+</body>
+</html>
