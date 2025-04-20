@@ -6,35 +6,94 @@ import './Welcome.css';
 
 const Staff = () => {
     const [userData, setUserData] = useState(null);
-    const [requests, setRequests] = useState([]);
+    const [assignedRequests, setAssignedRequests] = useState([]);
+    const [departmentRequests, setDepartmentRequests] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedRequest, setSelectedRequest] = useState(null); 
+    const [selectedRequest, setSelectedRequest] = useState(null);
 
     useEffect(() => {
         const data = getFromLocalStorage('projectFS');
+        console.log("👤 נתוני משתמש מה-localStorage:", data);
         setUserData(data);
 
-        if (data?.user?.username) {
-            axios.get(
-                `http://localhost:3006/api/staff/requests?staffUsername=${data.user.username}`,
-                {
-                    headers: {
-                        'user-role': 'Staff'
-                    }
-                }
-            )
-            .then(res => {
-                setRequests(res.data);
-                setIsLoading(false); 
-            })
-            .catch(err => {
-                console.error('Error loading staff requests:', err);
-                setIsLoading(false);
-            });
-        } else {
-            setIsLoading(false); 
+        if (!data?.user?.username) {
+            setIsLoading(false);
+            return;
         }
+
+        const fetchRequests = async () => {
+            try {
+                console.log(" שולח בקשה לפי מחלקה:", data.user.department);
+                const assignedResPromise = axios.get(`http://localhost:3006/api/staff/requests?staffUsername=${data.user.username}`, {
+                    headers: { 'user-role': 'Staff' }
+                });
+        
+                let departmentResPromise = Promise.resolve({ data: [] });
+        
+                // בדיקה אם קיימת מחלקה
+                if (data.user?.department) {
+                    departmentResPromise = axios.get(`http://localhost:3006/api/staff/requests/department-requests?department=${data.user.department}`, {
+                        headers: { 'user-role': 'Staff' }
+                    });
+                }
+        
+                const [assignedRes, departmentRes] = await Promise.all([
+                    assignedResPromise,
+                    departmentResPromise
+                ]);
+        
+                console.log(" בקשות אישיות:", assignedRes.data);
+                console.log(" בקשות לפי מחלקה:", departmentRes.data);
+        
+                setAssignedRequests(assignedRes.data);
+                setDepartmentRequests(departmentRes.data);
+            } catch (err) {
+                console.error("Error fetching requests:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        
+        fetchRequests();
     }, []);
+
+    const renderRequestsTable = (requests, title) => (
+        <div className="requests-box">
+            <h3>{title}</h3>
+            <table border="1" className="requests-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>ID</th>
+                        <th>Request Type</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                        <th>Submission Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {requests.length === 0 ? (
+                        <tr>
+                            <td colSpan="6">No requests found.</td>
+                        </tr>
+                    ) : (
+                        requests.map((req) => (
+                            req.student && (
+                                <tr key={req._id} onClick={() => setSelectedRequest(req)} style={{ cursor: 'pointer' }}>
+                                    <td>{req.student.firstname} {req.student.lastname}</td>
+                                    <td>{req.student.id}</td>
+                                    <td>{req.requestType?.name || '—'}</td>
+                                    <td>{req.course?.name || '—'}</td>
+                                    <td>{req.status}</td>
+                                    <td>{new Date(req.submissionDate).toLocaleDateString()}</td>
+                                </tr>
+                            )
+                        ))
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
 
     return (
         <div className="welcome">
@@ -48,52 +107,16 @@ const Staff = () => {
                     </div>
                 )}
 
-                <div className="requests-box">
-                    <h3>Student Requests assigned to you:</h3>
+                {isLoading ? (
+                    <p>Loading requests...</p>
+                ) : (
+                    <>
+                        {renderRequestsTable(assignedRequests, "Student Requests assigned to you")}
+                        {renderRequestsTable(departmentRequests, "בקשות לפי המחלקה שלי")}
+                    </>
+                )}
 
-                    {isLoading ? (
-                        <p>Loading requests...</p>
-                    ) : (
-                        <table border="1" className="requests-table">
-                            <thead>
-                                <tr>
-                                    <th>Student Name</th>
-                                    <th>ID</th>
-                                    <th>Request Type</th>
-                                    <th>Course</th>
-                                    <th>Status</th>
-                                    <th>Submission Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {requests.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="6">No requests assigned.</td>
-                                    </tr>
-                                ) : (
-                                    requests.map(req => (
-                                        req.student && req.staff ? (
-                                            <tr 
-                                                key={req._id}
-                                                onClick={() => setSelectedRequest(req)} 
-                                                style={{ cursor: 'pointer' }}
-                                            >
-                                                <td>{req.student.firstname} {req.student.lastname}</td>
-                                                <td>{req.student.id}</td>
-                                                <td>{req.requestType?.name || '—'}</td>
-                                                <td>{req.course?.name || '—'}</td>
-                                                <td>{req.status}</td>
-                                                <td>{new Date(req.submissionDate).toLocaleDateString()}</td>
-                                            </tr>
-                                        ) : null
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-
-                {selectedRequest && ( 
+                {selectedRequest && (
                     <div className="request-details-box">
                         <h3>Request Details</h3>
                         <p><strong>Student:</strong> {selectedRequest.student.firstname} {selectedRequest.student.lastname}</p>
@@ -103,7 +126,7 @@ const Staff = () => {
                         <p><strong>Status:</strong> {selectedRequest.status}</p>
                         <p><strong>Submission Date:</strong> {new Date(selectedRequest.submissionDate).toLocaleDateString()}</p>
 
-                        {selectedRequest.staffComments.length > 0 && (
+                        {selectedRequest.staffComments?.length > 0 && (
                             <div>
                                 <h4>Staff Comments:</h4>
                                 <ul>
@@ -118,7 +141,7 @@ const Staff = () => {
 
                         <button onClick={() => setSelectedRequest(null)}>Close</button>
                     </div>
-                )} 
+                )}
             </div>
         </div>
     );

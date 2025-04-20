@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3006;
-
+const userRoutes = require('./routes/users');
 
 app.use(express.json());
 app.use(cors());
@@ -24,6 +24,7 @@ const studentRequestsRouter = require('./routes/studentRequests');
 
 app.use('/api', authRoutes);
 app.use('/api/staff/requests', studentRequestsRouter);
+app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome' });
