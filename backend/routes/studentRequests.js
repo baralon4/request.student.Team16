@@ -41,8 +41,7 @@ router.get('/department-requests', async (req, res) => {
       .populate('requestType');
 
     const filtered = requests.filter(req => req.student?.department === department);
-
-    console.log("🔍 בקשות לפי מחלקה:", filtered); // נוסיף הדפסה לבדיקה
+ 
     res.json(filtered);
   } catch (err) {
     console.error('Error fetching department requests:', err);

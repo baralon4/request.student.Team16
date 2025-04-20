@@ -13,17 +13,17 @@ const Student = () => {
 
     return (
         <div className="welcome">
-        <div className="welcome-page-container">
-            <Header />
-            <div className="welcome-header-box">
-                {userData && (
-                    <>
-                        <h2>Welcome, {userData.user.username}!</h2>
-                        <p>this is your student page.</p>
-                    </>
-                )}
+            <div className="welcome-page-container">
+                <Header />
+                <div className="welcome-header-box">
+                    {userData && (
+                        <>
+                            <h2> ברוך הבא לאזור האישי שלך {userData.user.username}</h2>
+
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
         </div>
     );
 };

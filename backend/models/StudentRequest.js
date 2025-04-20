@@ -48,5 +48,4 @@ const studentRequestSchema = new mongoose.Schema({
   }]
 });
 
-
 module.exports = mongoose.model('StudentRequest', studentRequestSchema);

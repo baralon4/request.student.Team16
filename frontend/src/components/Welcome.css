@@ -12,8 +12,9 @@
   align-items: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
+  direction: rtl;
+  text-align: right;
 }
-
 
 .welcome-page-container {
   width: 100%;
@@ -23,7 +24,8 @@
   align-items: center;
   gap: 40px;
   position: relative;
-  
+  direction: rtl;
+  text-align: right;
 }
 
 .logout-container {
@@ -58,6 +60,7 @@
   border: 1px solid rgba(255,255,255,0.2);
   max-width: 800px;
   margin: 0 auto;
+  direction: rtl;
 }
 
 .welcome-header-box h2 {
@@ -83,11 +86,12 @@
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color: white;
-  text-align: center;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   max-width: 800px;
   margin: 0 auto;
+  direction: rtl;
+  text-align: right;
 }
 
 .requests-box h3 {
@@ -107,7 +111,7 @@
 .requests-box td {
   border: 1px solid rgba(255,255,255,0.3);
   padding: 10px;
-  text-align: center;
+  text-align: right;
 }
 
 .requests-box th {
@@ -131,6 +135,8 @@
   width: 100%;
   max-width: 800px;
   margin-bottom: 50px;
+  direction: rtl;
+  text-align: right;
 }
 
 .request-details-box h3 {

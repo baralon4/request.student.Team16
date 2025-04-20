@@ -28,14 +28,14 @@ function Login() {
     setError("");
 
     if (!username) {
-      setUsernameError("Username is required.");
+      setUsernameError("שדה שם המשתמש הוא שדה חובה");
       return;
     } else {
       setUsernameError("");
     }
 
     if (!password) {
-      setPasswordError("Password is required.");
+      setPasswordError("שדה סיסמה הוא שדה חובה");
       return;
     } else {
       setPasswordError("");
@@ -58,18 +58,18 @@ function Login() {
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("An error occurred. Please try again.");
+      setError("פרטי ההתחברות שגויים. אנא נסה שוב");
     }
   };
 
   return (
     <div className="login-page-container">
       <div className="login-box">
-        <h2>Login</h2>
+        <h2>התחברות</h2>
         <form onSubmit={handleLogin}>
           <div>
             <label>
-              Username:
+              שם משתמש
               <input
                 type="text"
                 value={username}
@@ -81,7 +81,7 @@ function Login() {
 
           <div>
             <label>
-              Password:
+             סיסמה
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -90,18 +90,18 @@ function Login() {
               {passwordError && <div className="error">{passwordError}</div>}
             </label>
             <div className="show-password">
+            <label htmlFor="showPassword">הצג סיסמה</label>
               <input
                 type="checkbox"
                 id="showPassword"
                 checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />
-              <label htmlFor="showPassword">Show Password</label>
             </div>
           </div>
 
           {error && <div className="error">{error}</div>}
-          <button type="submit">LOGIN</button>
+          <button type="submit">התחבר</button>
         </form>
       </div>
     </div>

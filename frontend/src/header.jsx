@@ -13,7 +13,7 @@ const Header = ()=>{
     return(<div className="header">
         <div className="nav-conatiner">
         <nav>
-            <div className="item"><a href="#" onClick={handleLogout} className="logout-link">Logout</a>
+            <div className="item"><a href="#" onClick={handleLogout} className="logout-link">התנתק</a>
             </div>
         </nav>
         </div>
