@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getFromLocalStorage } from "../utils/services";
-import "./Form.css";
+//import "./Form.css";
 
 export default function DepartmentRequests() {
   const [requests, setRequests] = useState([]);
@@ -16,7 +16,9 @@ export default function DepartmentRequests() {
     }
 
     axios
-      .get(`http://localhost:3006/api/staff/department-requests?department=${userData.user.department}`)
+      .get(
+        `http://localhost:3006/api/staff/department-requests?department=${userData.user.department}`
+      )
       .then((res) => {
         setRequests(res.data);
         setLoading(false);
@@ -49,7 +51,9 @@ export default function DepartmentRequests() {
           <tbody>
             {requests.map((req) => (
               <tr key={req._id}>
-                <td>{req.student?.firstname} {req.student?.lastname}</td>
+                <td>
+                  {req.student?.firstname} {req.student?.lastname}
+                </td>
                 <td>{req.student?.id}</td>
                 <td>{req.requestType?.name}</td>
                 <td>{req.course?.name}</td>
