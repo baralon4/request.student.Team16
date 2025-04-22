@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18'
+        }
+    }
 
     stages {
         stage('Checkout') {
@@ -21,17 +25,16 @@ pipeline {
         }
 
         stage('Test') {
-    steps {
-        script {
-            def packageJson = readJSON file: 'package.json'
-            if (packageJson.scripts?.test) {
-                sh 'npm test'
-            } else {
-                echo 'Test stage skipped ❌ no test script found'
+            steps {
+                script {
+                    def packageJson = readJSON file: 'package.json'
+                    if (packageJson.scripts?.test) {
+                        sh 'npm test'
+                    } else {
+                        echo 'Test stage skipped no test script found'
+                    }
+                }
             }
         }
-    }
-}
-
     }
 }
