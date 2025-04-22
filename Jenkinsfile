@@ -1,8 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-        }
+    agent any
+
+    tools {
+        nodejs 'node18'
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
                     if (packageJson.scripts?.test) {
                         sh 'npm test'
                     } else {
-                        echo 'Test stage skipped no test script found'
+                        echo 'Test stage skipped – no test script found'
                     }
                 }
             }
