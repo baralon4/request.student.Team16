@@ -10,21 +10,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    docker.image('node:18').inside {
-                        sh 'npm install'
-                    }
-                }
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    docker.image('node:18').inside {
-                        sh 'npm run build'
-                    }
-                }
+                sh 'npm run build'
             }
         }
 
@@ -33,11 +25,9 @@ pipeline {
                 script {
                     def packageJson = readJSON file: 'package.json'
                     if (packageJson.scripts?.test) {
-                        docker.image('node:18').inside {
-                            sh 'npm test'
-                        }
+                        sh 'npm test'
                     } else {
-                        echo 'Test stage skipped no test script found'
+                        echo 'Test stage skipped, no test script found in package.json'
                     }
                 }
             }

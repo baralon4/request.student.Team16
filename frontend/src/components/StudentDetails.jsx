@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./Form.css";
+//import "./Form.css";
 
 export default function StudentDetails() {
   const [username, setUsername] = useState("");
@@ -9,7 +9,9 @@ export default function StudentDetails() {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:3006/users/by-username/${username}`);
+      const res = await axios.get(
+        `http://localhost:3006/users/by-username/${username}`
+      );
       setDetails(res.data);
       setError("");
     } catch (err) {
@@ -32,10 +34,18 @@ export default function StudentDetails() {
 
       {details && (
         <div className="student-info">
-          <p><strong>שם פרטי:</strong> {details.firstname}</p>
-          <p><strong>שם משפחה:</strong> {details.lastname}</p>
-          <p><strong>תפקיד:</strong> {details.role}</p>
-          <p><strong>מחלקה:</strong> {details.department}</p>
+          <p>
+            <strong>שם פרטי:</strong> {details.firstname}
+          </p>
+          <p>
+            <strong>שם משפחה:</strong> {details.lastname}
+          </p>
+          <p>
+            <strong>תפקיד:</strong> {details.role}
+          </p>
+          <p>
+            <strong>מחלקה:</strong> {details.department}
+          </p>
         </div>
       )}
     </div>
