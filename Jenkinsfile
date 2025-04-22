@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'node18'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,13 +10,21 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                script {
+                    docker.image('node:18').inside {
+                        sh 'npm install'
+                    }
+                }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                script {
+                    docker.image('node:18').inside {
+                        sh 'npm run build'
+                    }
+                }
             }
         }
 
@@ -29,9 +33,11 @@ pipeline {
                 script {
                     def packageJson = readJSON file: 'package.json'
                     if (packageJson.scripts?.test) {
-                        sh 'npm test'
+                        docker.image('node:18').inside {
+                            sh 'npm test'
+                        }
                     } else {
-                        echo 'Test stage skipped – no test script found'
+                        echo 'Test stage skipped no test script found'
                     }
                 }
             }
