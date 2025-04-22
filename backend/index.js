@@ -1,37 +1,44 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3006;
-const userRoutes = require('./routes/users');
-
+const userRoutes = require("./routes/users");
 
 app.use(express.json());
 app.use(cors());
 
+const authRoutes = require("./routes/authRoutes");
+const studentRequestsRouter = require("./routes/studentRequests");
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+app.use("/api", authRoutes);
+app.use("/api/staff/requests", studentRequestsRouter);
+app.use("/users", userRoutes);
 
-
-const authRoutes = require('./routes/authRoutes');
-const studentRequestsRouter = require('./routes/studentRequests');
-
-app.use('/api', authRoutes);
-app.use('/api/staff/requests', studentRequestsRouter);
-app.use('/users', userRoutes);
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome' });
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome" });
 });
 
+let appReadyPromise = null;
+const INIT = {
+  didInit: new Promise((resolve) => {
+    appReadyPromise = resolve;
+  }),
+};
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+      appReadyPromise();
+    });
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+module.exports = { app, INIT };
