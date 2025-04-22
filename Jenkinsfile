@@ -21,16 +21,17 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                script {
-                    def testExists = fileExists('package.json') && sh(script: "npm run | grep test", returnStatus: true) == 0
-                    if (testExists) {
-                        sh 'npm test'
-                    } else {
-                        echo 'Test stage skipped – no test script found'
-                    }
-                }
+    steps {
+        script {
+            def packageJson = readJSON file: 'package.json'
+            if (packageJson.scripts?.test) {
+                sh 'npm test'
+            } else {
+                echo 'Test stage skipped ❌ no test script found'
             }
         }
+    }
+}
+
     }
 }
