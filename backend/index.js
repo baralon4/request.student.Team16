@@ -5,13 +5,13 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3006;
-const userRoutes = require("./routes/users");
 
 app.use(express.json());
 app.use(cors());
 
 const authRoutes = require("./routes/authRoutes");
 const studentRequestsRouter = require("./routes/studentRequests");
+const userRoutes = require("./routes/users");
 
 app.use("/api", authRoutes);
 app.use("/api/staff/requests", studentRequestsRouter);
@@ -22,6 +22,8 @@ app.get("/", (req, res) => {
 });
 
 let appReadyPromise = null;
+let server = null;
+
 const INIT = {
   didInit: new Promise((resolve) => {
     appReadyPromise = resolve;
@@ -34,11 +36,11 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => {
+    server = app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
       appReadyPromise();
     });
   })
   .catch((err) => console.error("MongoDB connection error:", err));
 
-module.exports = { app, INIT };
+module.exports = { app, INIT, server };
