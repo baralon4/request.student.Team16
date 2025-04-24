@@ -2,63 +2,49 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_COMPOSE = 'docker-compose'
-        JWT_SECRET = 'test-secret-key'
-        JWT_EXPIRES_IN = '24h'
+        NODE_VERSION = '18.17.1'
+        NODE_DIR = "${env.WORKSPACE}/node"
+        PATH = "${env.WORKSPACE}/node/bin:${env.PATH}"
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                dir('backend') {
-                    sh '[ -f package.json ] && npm install || echo "No package.json found, skipping npm install"'
-                }
-            }
-        }
-
-        stage('Start Services') {
+        stage('Setup Node.js') {
             steps {
                 sh '''
-                    docker --version || exit 0
-                    ${DOCKER_COMPOSE} up -d
-                    sleep 10
+                    if [ ! -d "$NODE_DIR" ]; then
+                        curl -O https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz
+                        mkdir -p $NODE_DIR
+                        tar -xf node-v$NODE_VERSION-linux-x64.tar.xz --strip-components=1 -C $NODE_DIR
+                    fi
+                    node -v
+                    npm -v
                 '''
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Install Dependencies') {
             steps {
-                dir('backend') {
-                    sh '[ -f package.json ] && npm run test:unit || echo "Skipping unit tests, script not found"'
+                sh 'npm install'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    def packageJson = readJSON file: 'package.json'
+                    if (packageJson.scripts?.test) {
+                        sh 'npm test'
+                    } else {
+                        echo 'Test stage skipped, no test script found in package.json'
+                    }
                 }
             }
-        }
-
-        stage('Run Integration Tests') {
-            steps {
-                dir('backend') {
-                    sh '[ -f package.json ] && npm run test:integration || echo "Skipping integration tests, script not found"'
-                }
-            }
-        }
-
-        stage('Stop Services') {
-            steps {
-                sh '${DOCKER_COMPOSE} down || true'
-            }
-        }
-    }
-
-    post {
-        always {
-            sh '${DOCKER_COMPOSE} down -v || true'
-            junit allowEmptyResults: true, testResults: 'backend/test-results/*.xml'
-        }
-        success {
-            sh 'echo " Pipeline completed successfully"'
-        }
-        failure {
-            sh 'echo " Pipeline failed"'
         }
     }
 }
