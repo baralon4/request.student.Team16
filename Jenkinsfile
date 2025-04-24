@@ -29,26 +29,20 @@ pipeline {
                 }
             }
         }
-
-        stage('Build') {
-            steps {
-                dir('backend') {
-                    sh 'npm run build'
-                }
-            }
-        }
-
         stage('Test') {
-            steps {
-                script {
-                    def packageJson = readJSON file: 'package.json'
-                    if (packageJson.scripts?.test) {
-                        sh 'npm test'
-                    } else {
-                        echo 'Test stage skipped, no test script found in package.json'
-                    }
+    steps {
+        dir('backend') {
+            script {
+                def packageJson = readJSON file: 'package.json'
+                if (packageJson.scripts?.test) {
+                    sh 'npm test'
+                } else {
+                    echo 'Test stage skipped, no test script found in package.json'
                 }
             }
         }
+    }
+}
+
     }
 }
