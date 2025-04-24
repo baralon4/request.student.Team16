@@ -1,9 +1,23 @@
 const request = require("supertest");
-const { app, INIT } = require("../index");
+const { app, INIT, server } = require("../index");
+const mongoose = require("mongoose");
 
 describe("api", () => {
   beforeAll(async () => {
     await INIT.didInit;
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
+
+    if (server) {
+      await new Promise((resolve) => {
+        server.close(() => {
+          console.log("Server closed");
+          resolve();
+        });
+      });
+    }
   });
 
   test("test jenkins2", async () => {
