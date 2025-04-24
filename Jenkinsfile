@@ -33,8 +33,8 @@ pipeline {
     steps {
         dir('backend') {
             script {
-                def packageJson = readJSON file: 'package.json'
-                if (packageJson.scripts?.test) {
+                def hasTestScript = sh(script: "grep -q '\"test\"' package.json && echo yes || echo no", returnStdout: true).trim()
+                if (hasTestScript == "yes") {
                     sh 'npm test'
                 } else {
                     echo 'Test stage skipped, no test script found in package.json'
@@ -43,6 +43,7 @@ pipeline {
         }
     }
 }
+
 
     }
 }
