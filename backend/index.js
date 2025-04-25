@@ -4,8 +4,6 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3006;
-
 app.use(express.json());
 app.use(cors());
 
@@ -21,26 +19,37 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome" });
 });
 
-let appReadyPromise = null;
 let server = null;
 
-const INIT = {
-  didInit: new Promise((resolve) => {
-    appReadyPromise = resolve;
-  }),
-};
+const startServer = async () => {
+  const PORT = process.env.PORT || 3006;
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
+  await mongoose.connect(process.env.MONGO_URI);
+
+  return new Promise((resolve) => {
     server = app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
-      appReadyPromise();
+      resolve(server);
     });
-  })
-  .catch((err) => console.error("MongoDB connection error:", err));
+  });
+};
 
-module.exports = { app, INIT, server };
+const stopServer = async () => {
+  if (server) {
+    await new Promise((resolve) => server.close(resolve));
+  }
+  await mongoose.disconnect();
+};
+
+if (require.main === module) {
+  startServer().catch((err) => {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  app,
+  startServer,
+  stopServer,
+};
