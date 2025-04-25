@@ -11,7 +11,7 @@ export default function EditUserRole() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3006/users/update-role/${userId}`, {
+      await axios.put(`http://localhost:3006/api/users/update-role/${userId}`, {
         role,
         firstname,
         lastname,

@@ -164,3 +164,10 @@
 .request-details-box button:hover {
   background-color: #ffffff33;
 }
+.requests-box tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.05); 
+}
+
+.requests-box tr:nth-child(odd) td {
+  background: rgba(255, 255, 255, 0.05); 
+}

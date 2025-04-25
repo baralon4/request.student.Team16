@@ -6,11 +6,11 @@ import Student from "./components/Student";
 import Staff from "./components/Staff";
 import Admin from "./components/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AddUser from "./components/AddUser";
-import EditUserRole from "./components/EditUserRole";
-import UserList from "./components/UserList";
-import StudentDetails from "./components/StudentDetails";
-import DepartmentRequests from "./components/DepartmentRequests";
+import AddUser from './components/AddUser';
+import EditUserRole from './components/EditUserRole';
+import UserList from './components/UserList';
+import StudentDetails from './components/StudentDetails';
+import DepartmentRequests from './components/DepartmentRequests';
 
 const App = () => {
   return (
@@ -21,7 +21,7 @@ const App = () => {
         <Route
           path="/student"
           element={
-            <ProtectedRoute allowedRole="Student">
+            <ProtectedRoute allowedRole="student">
               <Student />
             </ProtectedRoute>
           }
@@ -41,9 +41,8 @@ const App = () => {
               <Admin />
             </ProtectedRoute>
           }
-          
         />
-          <Route
+        <Route
           path="/admin/add-user"
           element={
             <ProtectedRoute allowedRole="Admin">
@@ -71,9 +70,9 @@ const App = () => {
         />
 
         <Route
-          path="/admin/student-details"
+          path="/staff/student-details"
           element={
-            <ProtectedRoute allowedRole="Admin">
+            <ProtectedRoute allowedRole="Staff">
               <StudentDetails />
             </ProtectedRoute>
           }
@@ -86,8 +85,7 @@ const App = () => {
                 </ProtectedRoute>
                 }
               />
-
-        </Routes>
+      </Routes>
     </Router>
   );
 };

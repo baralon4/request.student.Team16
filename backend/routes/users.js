@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 // הוספת משתמש
 router.post('/add-user', async (req, res) => {
-  const { username, firstname, lastname, password, role, department } = req.body;
+  const {id, username, firstname, lastname, password, role, department } = req.body;
 
   try {
     // בדיקה אם המשתמש כבר קיים
@@ -13,7 +13,7 @@ router.post('/add-user', async (req, res) => {
       return res.status(400).json({ message: 'שם משתמש כבר קיים במערכת' });
     }
 
-    const newUser = new User({ username, firstname, lastname, password, role, department });
+    const newUser = new User({ id, username, firstname, lastname, password, role, department });
     await newUser.save();
     res.status(201).json({ message: 'משתמש נוסף בהצלחה' });
 

@@ -9,7 +9,7 @@ export default function StudentDetails() {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:3006/users/by-username/${username}`);
+      const res = await axios.get(`http://localhost:3006/api/users/by-username/${username}`);
       setDetails(res.data);
       setError("");
     } catch (err) {

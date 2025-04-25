@@ -1,3 +1,4 @@
+//most recent
 const User = require('../models/User');
 
 const login = async (req, res) => {
@@ -13,12 +14,11 @@ const login = async (req, res) => {
     res.json({
       success: true,
       user: {
-        ID: user.ID,
+        _id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
         username: user.username,
-        role: user.role,
-        department: user.department
+        role: user.role
       }
     });
   } catch (err) {

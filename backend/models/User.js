@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: false,
+    required: true,
     unique: true,
   },
   username: {
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   },
   department: {
     type: String,
-    required: true ,
+    required: true,
   
   }
 

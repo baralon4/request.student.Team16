@@ -7,7 +7,7 @@ export default function UserList() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3006/users/all-users")
+      .get("http://localhost:3006/api/users/all-users")
       .then((res) => setUsers(res.data))
       .catch((err) => console.error("שגיאה בטעינת המשתמשים", err));
   }, []);
