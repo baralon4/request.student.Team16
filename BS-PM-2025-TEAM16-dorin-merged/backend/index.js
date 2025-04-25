@@ -1,11 +1,23 @@
+//most recent
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
+const PORT = process.env.PORT || 3006;
+
+// Middleware
 app.use(express.json());
 app.use(cors());
+
+// חיבור למסד נתונים
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err) => console.error('MongoDB connection error:', err));
 
 // ייבוא ראוטים
 const authRoutes = require('./routes/authRoutes');
@@ -16,13 +28,14 @@ const userRoutes = require('./routes/users');
 app.use('/api', authRoutes);
 app.use('/api/staff/requests', studentRequestsRouter);
 app.use('/api/requests', studentRequestsRouter);
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); 
 
-// ייבוא מודלים לשליפות
+// ייבוא מודלים
 const RequestType = require('./models/RequestType');
 const Course = require('./models/Course');
 
-// ראוט לשליפת נושאי בקשה
+
+// שליפת נושאי בקשה
 app.get('/api/topics', async (req, res) => {
   try {
     const topics = await RequestType.find({});
@@ -32,7 +45,7 @@ app.get('/api/topics', async (req, res) => {
   }
 });
 
-// ראוט לשליפת קורסים
+// שליפת קורסים
 app.get('/api/courses', async (req, res) => {
   try {
     const courses = await Course.find({});
@@ -47,42 +60,8 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome' });
 });
 
-// שליטה על השרת - startServer ו-stopServer
-let server = null;
+// הרצת השרת
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
 
-const startServer = async () => {
-  const PORT = process.env.PORT || 3006;
-
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
-
-  return new Promise((resolve) => {
-    server = app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-      resolve(server);
-    });
-  });
-};
-
-const stopServer = async () => {
-  if (server) {
-    await new Promise((resolve) => server.close(resolve));
-  }
-  await mongoose.disconnect();
-};
-
-// הרצת השרת רק אם מריצים את הקובץ ישירות
-if (require.main === module) {
-  startServer().catch((err) => {
-    console.error("Failed to start server:", err);
-    process.exit(1);
-  });
-}
-
-module.exports = {
-  app,
-  startServer,
-  stopServer,
-};

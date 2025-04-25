@@ -1,3 +1,4 @@
+//most recent
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -9,13 +10,11 @@ const Course = require('../models/Course');
 const RequestType = require('../models/RequestType');
 const { getRequestsForStaff } = require('../controllers/studentRequestsController');
 
-// יצירת תיקייה להעלאת קבצים אם לא קיימת
 const uploadPath = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath);
 }
 
-// הגדרות Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadPath);
@@ -25,18 +24,9 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + '-' + file.originalname);
   }
 });
+
 const upload = multer({ storage: storage });
 
-// פונקציית בדיקה אם המשתמש הוא Staff
-const isStaff = (req, res, next) => {
-  if (req.headers["user-role"] === "Staff") {
-    next();
-  } else {
-    return res.status(403).json({ message: "Unauthorized - Not Staff" });
-  }
-};
-
-// שליחת בקשה חדשה
 router.post('/', upload.array('documents'), async (req, res) => {
   try {
     const {
@@ -54,6 +44,7 @@ router.post('/', upload.array('documents'), async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    
     const studentData = await User.findById(student);
     const staffData = await User.findById(staff);
     const courseData = await Course.findById(course);
@@ -88,34 +79,19 @@ router.post('/', upload.array('documents'), async (req, res) => {
     res.status(500).json({ message: 'שגיאה בשליחת הבקשה', error: err.message });
   }
 });
-
-// שליפת כל הבקשות לפי מחלקה (מספר דרכים שונות)
-
-// דרך 1: רק של staff רשום
-router.get("/", isStaff, getRequestsForStaff);
-
-// דרך 2: שליפת בקשות לפי מחלקה בנתיב /department/:departmentName
-router.get("/department/:departmentName", async (req, res) => {
-  try {
-    const requests = await StudentRequest.find({
-      department: req.params.departmentName,
-    })
-      .populate("student", "username")
-      .populate("course", "name")
-      .populate("requestType", "name");
-
-    res.json(requests);
-  } catch (err) {
-    console.error("Error loading requests for the department:", err);
-    res.status(500).json({ message: "Error loading requests for the department" });
+const isStaff = (req, res, next) => {
+  if (req.headers['user-role'] === 'Staff') {
+    next();
+  } else {
+    return res.status(403).json({ message: "Unauthorized - Not Staff" });
   }
-});
+};
 
-// דרך 3: שליפת בקשות לפי פרמטר מחלקה (department) ב-query
-router.get("/department-requests", async (req, res) => {
+
+router.get('/department-requests', async (req, res) => {
   const department = req.query.department;
   if (!department) {
-    return res.status(400).json({ message: "Missing department" });
+    return res.status(400).json({ message: 'Missing department' });
   }
 
   try {
@@ -147,17 +123,8 @@ router.get("/department-requests", async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
-router.get("/by-student-username/:username", async (req, res) => {
-  try {
-    const requests = await StudentRequest.find({ studentUsername: req.params.username })
-      .populate("requestType", "name")
-      .populate("course", "name")
-      .populate("staff", "firstname lastname");
 
-    res.json(requests);
-  } catch (err) {
-    console.error("שגיאה בשליפת בקשות לסטודנט:", err);
-    res.status(500).json({ message: "שגיאה בשרת" });
-  }
-});
+
+router.get('/', isStaff, getRequestsForStaff);
 module.exports = router;
+

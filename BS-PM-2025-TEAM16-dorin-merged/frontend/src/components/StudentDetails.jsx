@@ -5,7 +5,6 @@ import "./Form.css";
 export default function StudentDetails() {
   const [username, setUsername] = useState("");
   const [details, setDetails] = useState(null);
-  const [requests, setRequests] = useState([]);
   const [error, setError] = useState("");
 
   const handleSearch = async () => {
@@ -13,13 +12,8 @@ export default function StudentDetails() {
       const res = await axios.get(`http://localhost:3006/api/users/by-username/${username}`);
       setDetails(res.data);
       setError("");
-
-      // שליפת בקשות של אותו סטודנט
-      const requestsRes = await axios.get(`http://localhost:3006/api/requests/by-student-username/${username}`);
-      setRequests(requestsRes.data);
     } catch (err) {
       setDetails(null);
-      setRequests([]);
       setError("לא נמצאו פרטים עבור שם המשתמש הזה.");
     }
   };
@@ -42,23 +36,6 @@ export default function StudentDetails() {
           <p><strong>שם משפחה:</strong> {details.lastname}</p>
           <p><strong>תפקיד:</strong> {details.role}</p>
           <p><strong>מחלקה:</strong> {details.department}</p>
-        </div>
-      )}
-
-      {requests.length > 0 && (
-        <div className="student-requests">
-          <h3>בקשות הסטודנט:</h3>
-          <ul>
-            {requests.map((req, i) => (
-              <li key={i} style={{ border: "1px solid #ccc", padding: "10px", marginBottom: "10px" }}>
-                <p><strong>תיאור:</strong> {req.description}</p>
-                <p><strong>סוג בקשה:</strong> {req.requestType?.name || req.requestTypeName}</p>
-                <p><strong>קורס:</strong> {req.course?.name || req.courseName}</p>
-                <p><strong>סטטוס:</strong> {req.status}</p>
-                <p><strong>תאריך הגשה:</strong> {new Date(req.submissionDate).toLocaleDateString()}</p>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
     </div>

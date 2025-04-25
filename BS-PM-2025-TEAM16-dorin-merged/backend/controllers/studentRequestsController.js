@@ -1,7 +1,8 @@
-const StudentRequest = require("../models/StudentRequest");
-const User = require("../models/User");
-const RequestType = require("../models/RequestType");
-const Course = require("../models/Course");
+const StudentRequest = require('../models/StudentRequest');
+const User = require('../models/User');
+const RequestType = require('../models/RequestType');
+const Course = require('../models/Course');
+
 
 const getRequestsForStaff = async (req, res) => {
   try {
@@ -14,10 +15,12 @@ const getRequestsForStaff = async (req, res) => {
     }
 
     const requests = await StudentRequest.find({ staff: staffUser._id })
-      .populate("student", "firstname lastname id department")
-      .populate("staff", "firstname lastname")
-      .populate("requestType", "name")
-      .populate("course", "name");
+      .populate('student', 'firstname lastname id department')
+      .populate('staff', 'firstname lastname')
+      .populate('requestType', 'name')
+      .populate('course', 'name');
+
+
 
     res.json(requests);
   } catch (err) {
@@ -26,5 +29,5 @@ const getRequestsForStaff = async (req, res) => {
 };
 
 module.exports = {
-  getRequestsForStaff,
+  getRequestsForStaff
 };

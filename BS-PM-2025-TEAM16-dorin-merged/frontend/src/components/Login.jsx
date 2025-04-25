@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 import { API_URL } from "../utils/resources";
-import { saveToLocalStorage, getFromLocalStorage,Validators } from "../utils/services";
+import { saveToLocalStorage, getFromLocalStorage } from "../utils/services";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -27,14 +27,14 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    if (!Validators.exists(username)) {
+    if (!username) {
       setUsernameError("שדה שם המשתמש הוא שדה חובה");
       return;
     } else {
       setUsernameError("");
     }
 
-    if (!Validators.exists(password)) {
+    if (!password) {
       setPasswordError("שדה סיסמה הוא שדה חובה");
       return;
     } else {

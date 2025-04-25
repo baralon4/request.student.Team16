@@ -3,11 +3,11 @@
 }
 
 .welcome {
-  min-height: 100%;
+  min-height: 100vh;
   background: linear-gradient(135deg, #A5DD9B, #51829B);
   font-family: 'Poppins', sans-serif;
   padding: 60px 40px 100px;
-  display: block;
+  display: flex;
   justify-content: center;
   align-items: flex-start;
   overflow-x: hidden;
